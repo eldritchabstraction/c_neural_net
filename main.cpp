@@ -12,36 +12,50 @@
 
 using namespace std;
 
-class sigmoid {
+double sigmoid(double x)
+{
+    return (1 / (1 + exp(-x)));
+}
+
+class layer {
 public:
-    sigmoid() {};
+    layer(vector<double> &theta): _theta(theta) {};
 
-    void demo(double start, double finish)
+    double process(vector<double> &x)
     {
-        printf("Demoing sigmoid between values of %f and %f\n", start, finish);
+        double sum = 0;
 
-        for (double i = start; i < finish; i += 0.1)
+        if (_theta.size() != x.size())
         {
-            printf("sigmoid(%f) = %f\n", i, exercise(i));
+            cout << "Error: theta size: " << _theta.size() << " and x size: " << x.size() << " must be symmetric\n";
+            return 0;
         }
 
-    }
+        for (int i = 0; i < x.size(); i++)
+        {
+            sum += x[i] * _theta[i];
+        }
 
-    double operator()(double x)
-    {
-        return exercise(x);
+        return sigmoid(sum);
     }
 
 private:
-    double exercise(double x)
-    {
-        return (1 / (1 + exp(-x)));
-    }
+    vector<double> _theta;
 };
 
 int main (void)
 {
-   sigmoid a_sigmoid;
+    vector<double> theta    = {-10, 20, 20};
+    vector<double> x_one    = {1, 0, 0};
+    vector<double> x_two    = {1, 0, 1};
+    vector<double> x_three  = {1, 1, 0};
+    vector<double> x_four   = {1, 1, 1};
+    layer layer_one(theta);
+
+    cout << "x = {0, 0} -> " << layer_one.process(x_one) << endl;
+    cout << "x = {0, 1} -> " << layer_one.process(x_two) << endl;
+    cout << "x = {1, 0} -> " << layer_one.process(x_three) << endl;
+    cout << "x = {1, 1} -> " << layer_one.process(x_four) << endl;
 
 }
 
